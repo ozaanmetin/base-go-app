@@ -16,9 +16,10 @@ func GenerateTokenPair(user *models.User) (string, string, error) {
 	refreshTokenLifetime := time.Duration(environment.GetAsInt("REFRESH_TOKEN_LIFETIME", 30)) * 24 * time.Hour
 	// Creating the access token
 	accessTokenClaims := jwt.MapClaims{
-		"sub": user.ID,
-		"exp": time.Now().Add(accessTokenLifetime).Unix(),
-		"iat": time.Now().Unix(),
+		"sub":  user.ID,
+		"role": user.Role,
+		"exp":  time.Now().Add(accessTokenLifetime).Unix(),
+		"iat":  time.Now().Unix(),
 	}
 	accessTokenString, err := createToken(accessTokenClaims)
 	if err != nil {
