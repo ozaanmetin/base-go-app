@@ -28,3 +28,23 @@ func (service *UserService) Login(username string, password string) (*models.Use
 	return user, nil
 
 }
+
+func (service *UserService) FindAll() ([]models.User, error) {
+	return service.UserRepository.FindAll()
+}
+
+func (service *UserService) FindByID(id string) (*models.User, error) {
+	return service.UserRepository.FindByID(id)
+}
+
+func (service *UserService) Create(user *models.User) error {
+	return service.UserRepository.Create(user)
+}
+
+func (service *UserService) Update(user *models.User) error {
+	return service.UserRepository.Update(user)
+}
+
+func (service *UserService) Delete(id string) error {
+	return service.UserRepository.Delete(id)
+}
