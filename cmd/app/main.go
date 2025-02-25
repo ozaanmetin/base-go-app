@@ -4,6 +4,7 @@ import (
 	"base-go-app/src/apps/users/models"
 	"base-go-app/src/common/utils/environment"
 	"base-go-app/src/database"
+	"base-go-app/src/middlewares"
 
 	"github.com/gin-gonic/gin"
 
@@ -15,6 +16,9 @@ func main() {
 	database.ConnectPostgres()
 
 	r := gin.Default()
+	r.Use(middlewares.StrictHostValidationMiddleware())
+	r.Use(middlewares.CorsMiddleware())
+
 	// Api Group
 	api := r.Group("/api")
 	// Authentication
@@ -25,7 +29,6 @@ func main() {
 			auth.POST("/refresh", jwtHandlers.RefreshHandler)
 		}
 	}
-
 	usersGroup := api.Group("/users")
 	{
 		{
@@ -37,7 +40,10 @@ func main() {
 		}
 	}
 
-	r.GET("/ping", func(c *gin.Context) {
+	// Authenticated Group
+	authenticated := api.Group("/authenticated")
+	authenticated.Use(middlewares.AuthMiddleware())
+	authenticated.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
 
