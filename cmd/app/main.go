@@ -4,11 +4,12 @@ import (
 	"base-go-app/src/apps/users/models"
 	"base-go-app/src/common/utils/environment"
 	"base-go-app/src/database"
-	"base-go-app/src/middlewares"
 
 	"github.com/gin-gonic/gin"
 
 	jwtHandlers "base-go-app/src/apps/users/handlers/jwt"
+	authenticationMiddlewares "base-go-app/src/middlewares/authentication"
+	securityMiddlewares "base-go-app/src/middlewares/security"
 )
 
 func main() {
@@ -16,8 +17,8 @@ func main() {
 	database.ConnectPostgres()
 
 	r := gin.Default()
-	r.Use(middlewares.StrictHostValidationMiddleware())
-	r.Use(middlewares.CorsMiddleware())
+	r.Use(securityMiddlewares.StrictHostValidationMiddleware())
+	r.Use(securityMiddlewares.CorsMiddleware())
 
 	// Api Group
 	api := r.Group("/api")
@@ -42,7 +43,7 @@ func main() {
 
 	// Authenticated Group
 	authenticated := api.Group("/authenticated")
-	authenticated.Use(middlewares.AuthMiddleware())
+	authenticated.Use(authenticationMiddlewares.AuthMiddleware(), authenticationMiddlewares.CheckRoleMiddleware("admin"))
 	authenticated.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
