@@ -1,43 +1,45 @@
 #!/bin/bash
 
-# Ensure Go binary is available in PATH
-export PATH=$PATH:/usr/local/go/bin
-
-# Set the Go module path
-export GO111MODULE=on
-
 # Load environment variables from .env file
 if [ -f .env ]; then
-  echo "Loading environment variables from .env file"
   source .env
 fi
 
 # PostgreSQL connection string
 connection_string="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable"
 
-# Define the location of the migrations for each app
-declare -a MIGRATION_DIRS=(
-    "src/database/migrations/users"
-    # Add more apps here
-)
+# Ensure we have the required arguments
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 --path <migration_path> --number <migrations_to_roll_back>"
+    exit 1
+fi
 
-
-
-# Function to run migrations for each app
-run_migrations() {
-    for dir in "${MIGRATION_DIRS[@]}"; do
-        echo "Running migrations for $dir..."
-
-        migrate --path $dir --database $connection_string down
-
-        if [ $? -ne 0 ]; then
-            echo "Error running migrations for $dir. Exiting."
+# Parse command line arguments
+while [ "$1" != "" ]; do
+    case $1 in
+        --path)
+            shift
+            MIGRATION_PATH=$1
+            ;;
+        --number)
+            shift
+            MIGRATION_NUMBER=$1
+            ;;
+        *)
+            echo "Invalid option: $1"
             exit 1
-        fi
-    done
-}
+            ;;
+    esac
+    shift
+done
 
-# Run migrations
-run_migrations
+# Run migrations down for the specified number
+echo "Rolling back $MIGRATION_NUMBER migrations for $MIGRATION_PATH..."
+migrate --path $MIGRATION_PATH --database $connection_string down $MIGRATION_NUMBER
 
-echo "All migrations have been successfully applied!"
+if [ $? -ne 0 ]; then
+    echo "Error rolling back migrations. Exiting."
+    exit 1
+fi
+
+echo "Migrations rolled back successfully!"
