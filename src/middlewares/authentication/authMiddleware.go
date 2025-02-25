@@ -40,6 +40,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Set the granted userId in the context
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 			c.Set("userId", claims["sub"])
+			c.Set("role", claims["role"])
 			c.Next()
 		} else {
 			c.AbortWithStatusJSON(
