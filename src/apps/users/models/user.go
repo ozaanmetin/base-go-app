@@ -29,7 +29,7 @@ type User struct {
 	LastName  string `gorm:"not null;size:100" json:"last_name"`
 	Email     string `gorm:"unique;not null;size:255" json:"email"`
 	Password  string `gorm:"not null;size:255" json:"password"`
-	Role      string `gorm:"not null;size:50" json:"role"`
+	Role      string `gorm:"not null;size:50;default:'member'" json:"role"`
 }
 
 // BeforeCreate hashes the password and validates the role before the record is created
@@ -52,8 +52,12 @@ func (u *User) BeforeCreate(db *gorm.DB) error {
 
 // isValidRole checks if the user's role is valid
 func (u *User) isValidRole() bool {
-	_, exists := validRoles[u.Role]
-	return exists
+	if u.Role != "" {
+		_, exists := validRoles[u.Role]
+		return exists
+	}
+	return true
+	
 }
 
 // Deactivate marks the user as inactive
