@@ -3,6 +3,7 @@ package services
 import (
 	"base-go-app/src/apps/users/models"
 	"base-go-app/src/apps/users/repositories"
+	"base-go-app/src/common/pagination"
 	"base-go-app/src/database"
 )
 
@@ -31,6 +32,15 @@ func (service *UserService) Login(username string, password string) (*models.Use
 
 func (service *UserService) FindAll() ([]models.User, error) {
 	return service.UserRepository.FindAll()
+}
+
+func (service *UserService) FindAllPaginated(page int, pageSize int) ([]models.User, *pagination.Pagination, error) {
+	var users []models.User
+	pagination, err := pagination.Paginate(service.UserRepository.DB, &models.User{}, page, pageSize, &users)
+	if err != nil {
+		return nil, nil, err
+	}
+	return users, pagination, err
 }
 
 func (service *UserService) FindByID(id string) (*models.User, error) {
