@@ -12,7 +12,8 @@ func UserCrudRouter(router *gin.RouterGroup) {
 	// User Crud
 	userHandler := handlers.CreateUserCrudHandler()
 	allowedRoles := []string{
-		models.Superuser, models.Manager,
+		models.Superuser,
+		models.Manager,
 	}
 	{
 		usersRouter := router.Group("/users")
@@ -21,10 +22,11 @@ func UserCrudRouter(router *gin.RouterGroup) {
 			middlewares.CheckRoleMiddleware(allowedRoles...),
 		)
 		{
-			usersRouter.GET(
-				"/",
-				userHandler.ListAll,
-			)
+			usersRouter.GET("/", userHandler.ListAll)
+			usersRouter.GET("/:id",userHandler.Retrieve)
+			usersRouter.POST("/", userHandler.Create)
+			usersRouter.PATCH("/:id", userHandler.Update)
+			usersRouter.DELETE("/:id", userHandler.Delete)
 		}
 	}
 }
