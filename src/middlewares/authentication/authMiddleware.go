@@ -36,6 +36,7 @@ func AuthMiddleware() gin.HandlerFunc {
 				http.StatusUnauthorized,
 				gin.H{"error": "Invalid Token"},
 			)
+			return
 		}
 		// Set the granted userId in the context
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
