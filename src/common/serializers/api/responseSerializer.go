@@ -1,7 +1,8 @@
 package responses
 
 type ApiResponse struct {
-	Message string
-	Data    interface{}
-	Errors  interface{}
+	Message    string
+	Data       interface{}
+	Errors     interface{}
+	Pagination interface{}
 }
