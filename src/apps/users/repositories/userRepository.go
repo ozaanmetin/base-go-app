@@ -26,6 +26,10 @@ func (repo *UserRepository) FindAll() ([]models.User, error) {
 func (repo *UserRepository) FindByID(id string) (*models.User, error) {
 	var user models.User
 	if err := repo.DB.First(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			// User not found
+			return nil, errors.New("user not found")
+		}
 		return nil, err
 	}
 	return &user, nil
@@ -53,5 +57,16 @@ func (repo *UserRepository) Update(user *models.User) error {
 }
 
 func (repo *UserRepository) Delete(id string) error {
-	return repo.DB.Delete(&models.User{}, id).Error
+	var user models.User
+	if err := repo.DB.First(&user, "id = ?", id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return errors.New("user not found")
+		}
+		return err
+	}
+
+	if err := repo.DB.Delete(&user).Error; err != nil {
+		return err
+	}
+	return nil
 }
