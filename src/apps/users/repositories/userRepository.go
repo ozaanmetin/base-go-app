@@ -25,7 +25,8 @@ func (repo *UserRepository) FindAll() ([]models.User, error) {
 
 func (repo *UserRepository) FindByID(id string) (*models.User, error) {
 	var user models.User
-	if err := repo.DB.First(&user).Error; err != nil {
+	err := repo.DB.Where("id = ?", id).First(&user).Error
+	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			// User not found
 			return nil, errors.New("user not found")
