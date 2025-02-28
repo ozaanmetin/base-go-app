@@ -3,7 +3,7 @@ package main
 import (
 	"base-go-app/config/settings/environment"
 	"base-go-app/src/database"
-	usersRouters "base-go-app/src/routers/users"
+	"base-go-app/src/routers"
 
 	"github.com/gin-gonic/gin"
 
@@ -28,7 +28,8 @@ func setupRouter() *gin.Engine {
 	// Api Group
 	api := r.Group("/api")
 	// Authentication
-	usersRouters.AuthenticationRouter(api)
-	usersRouters.UserCrudRouter(api)
+	routers.AuthenticationRouter(api)
+	routers.UsersRouter(api)
+	routers.RegionsRouter(api)
 	return r
 }
