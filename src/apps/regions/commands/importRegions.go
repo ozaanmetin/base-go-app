@@ -3,7 +3,6 @@ package main
 import (
 	"base-go-app/config/settings/environment"
 	"base-go-app/src/apps/regions/models"
-	"base-go-app/src/common/utils/types"
 	"base-go-app/src/database"
 	"log"
 	"path/filepath"
@@ -45,18 +44,18 @@ func main() {
 	}
 
 	// Create a JSON object for the name of the country
-	nameJson, err := types.DumpMapAsJson(map[string]interface{}{
-		"en": "Turkey",
-		"tr": "Türkiye",
-	})
 	if err != nil {
 		log.Fatalf("Error dumping map as json: %v", err)
 	}
 
+	countryName := map[string]interface{}{
+		"en": "Turkey",
+		"tr": "Türkiye",
+	}
 	// Create or fetch the country "Turkey" if it doesn't exist
 	var country models.Country
 	err = database.PostgresContext.Where("code = ?", "tr").FirstOrCreate(&country, models.Country{
-		Name: nameJson,
+		Name: countryName,
 		Code: "tr",
 	}).Error
 	if err != nil {
