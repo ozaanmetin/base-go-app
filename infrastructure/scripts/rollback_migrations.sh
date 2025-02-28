@@ -7,20 +7,17 @@ fi
 
 # PostgreSQL connection string
 connection_string="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB?sslmode=disable"
+migrations_path="src/database/migrations"
 
 # Ensure we have the required arguments
 if [ "$#" -ne 4 ]; then
-    echo "Usage: $0 --path <migration_path> --number <migrations_to_roll_back>"
+    echo "Usage: $0 --path $migrations_path --number <migrations_to_roll_back>"
     exit 1
 fi
 
 # Parse command line arguments
 while [ "$1" != "" ]; do
     case $1 in
-        --path)
-            shift
-            MIGRATION_PATH=$1
-            ;;
         --number)
             shift
             MIGRATION_NUMBER=$1
