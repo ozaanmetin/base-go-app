@@ -17,7 +17,7 @@ connection_string="postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$
 
 # Define the location of the migrations for each app
 declare -a MIGRATION_DIRS=(
-    "src/database/migrations/users"
+    "src/database/migrations"
     # Add more apps here
 )
 
