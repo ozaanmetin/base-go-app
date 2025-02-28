@@ -1,8 +1,8 @@
 package services
 
 import (
+	"base-go-app/config/settings/environment"
 	"base-go-app/src/apps/users/models"
-	"base-go-app/src/common/utils/environment"
 	"fmt"
 	"os"
 	"time"

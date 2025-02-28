@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"base-go-app/src/common/utils/environment"
+	"base-go-app/config/settings/environment"
 	"net/http"
 	"regexp"
 	"strings"
