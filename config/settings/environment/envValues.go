@@ -15,7 +15,7 @@ func GetBaseDir() (string, error) {
 
 	// Get the directory of the current file
 	baseDir := filepath.Dir(currentFilePath)
-	baseDir, err := filepath.Abs(filepath.Join(baseDir, "..", ".."))
+	baseDir, err := filepath.Abs(filepath.Join(baseDir, "..", "..", ".."))
 	if err != nil {
 		return "", err
 	}
