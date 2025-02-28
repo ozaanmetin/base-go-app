@@ -1,7 +1,7 @@
 package main
 
 import (
-	"base-go-app/src/common/utils/environment"
+	"base-go-app/config/settings/environment"
 	"base-go-app/src/database"
 	usersRouters "base-go-app/src/routers/users"
 
@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// Initialize Environment Variables
-	environment.InitalizeEnv()
+	environment.InitalizeDotEnv()
 	// Connect to Postgres Database
 	database.ConnectPostgres()
 	// Setup Router and Run
