@@ -32,6 +32,10 @@ type User struct {
 	Role      string `gorm:"not null;size:50;default:'member'" json:"role"`
 }
 
+func (User) TableName() string {
+	return "users"
+}
+
 // BeforeCreate hashes the password and validates the role before the record is created
 func (u *User) BeforeCreate(db *gorm.DB) error {
 	// Hash password before storing it
@@ -57,7 +61,7 @@ func (u *User) isValidRole() bool {
 		return exists
 	}
 	return true
-	
+
 }
 
 // Deactivate marks the user as inactive
