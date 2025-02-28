@@ -8,14 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UserCrudRouter(router *gin.RouterGroup) {
+func UsersRouter(router *gin.RouterGroup) {
 	// User Crud
 	userHandler := handlers.CreateUserCrudHandler()
-	allowedRoles := []string{
-		models.Superuser,
-		models.Manager,
-	}
 	{
+		allowedRoles := []string{
+			models.Superuser,
+			models.Manager,
+		}
 		usersRouter := router.Group("/users")
 		usersRouter.Use(
 			middlewares.AuthMiddleware(),
@@ -23,7 +23,7 @@ func UserCrudRouter(router *gin.RouterGroup) {
 		)
 		{
 			usersRouter.GET("/", userHandler.ListAll)
-			usersRouter.GET("/:id",userHandler.Retrieve)
+			usersRouter.GET("/:id", userHandler.Retrieve)
 			usersRouter.POST("/", userHandler.Create)
 			usersRouter.PATCH("/:id", userHandler.Update)
 			usersRouter.DELETE("/:id", userHandler.Delete)
