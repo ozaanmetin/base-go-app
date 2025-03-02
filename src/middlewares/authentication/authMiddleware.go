@@ -6,6 +6,9 @@ import (
 	"os"
 	"strings"
 
+	responses "base-go-app/src/common/serializers/api"
+	"base-go-app/src/common/serializers/errors"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +21,13 @@ func AuthMiddleware() gin.HandlerFunc {
 		if authHeader == "" {
 			c.AbortWithStatusJSON(
 				http.StatusUnauthorized,
-				gin.H{"error": "Authorization header is required"},
+				responses.ErrorResponse{
+					Message: "Authorization header is required",
+					Errors: []errors.ErrorSerializer{{
+						Field:   "Authorization",
+						Message: "Authorization header is missing or empty",
+					}},
+				},
 			)
 			return
 		}
@@ -34,7 +43,13 @@ func AuthMiddleware() gin.HandlerFunc {
 		if err != nil {
 			c.AbortWithStatusJSON(
 				http.StatusUnauthorized,
-				gin.H{"error": "Invalid Token"},
+				responses.ErrorResponse{
+					Message: "Unauthorized Access",
+					Errors: []errors.ErrorSerializer{{
+						Field:   "Authorization",
+						Message: "Invalid Token",
+					}},
+				},
 			)
 			return
 		}
@@ -46,7 +61,13 @@ func AuthMiddleware() gin.HandlerFunc {
 		} else {
 			c.AbortWithStatusJSON(
 				http.StatusUnauthorized,
-				gin.H{"error": "Invalid Token"},
+				responses.ErrorResponse{
+					Message: "Unauthorized Access",
+					Errors: []errors.ErrorSerializer{{
+						Field:   "Authorization",
+						Message: "Invalid Token",
+					}},
+				},
 			)
 		}
 	}

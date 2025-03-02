@@ -1,9 +1,9 @@
 package serializers
 
 type RefreshRequest struct {
-	RefreshToken string `binding:"required"`
+	RefreshToken string `binding:"required" json:"refreshToken"`
 }
 
 type RefreshResponse struct {
-	AccessToken string
+	AccessToken string `json:"accessToken"`
 }

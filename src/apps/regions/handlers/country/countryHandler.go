@@ -4,6 +4,7 @@ import (
 	"base-go-app/src/apps/regions/services"
 	"base-go-app/src/common/pagination"
 	responses "base-go-app/src/common/serializers/api"
+	"base-go-app/src/common/serializers/errors"
 	"fmt"
 	"net/http"
 
@@ -24,9 +25,9 @@ func (handler *CountryHandler) ListAll(c *gin.Context) {
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
-			responses.ApiResponse{
+			responses.ErrorResponse{
 				Message: "Error listing users",
-				Errors: []responses.ApiResponse{
+				Errors: []errors.ErrorSerializer{
 					{
 						Message: err.Error(),
 					},
@@ -36,7 +37,7 @@ func (handler *CountryHandler) ListAll(c *gin.Context) {
 	}
 	c.JSON(
 		http.StatusOK,
-		responses.ApiResponse{
+		responses.PaginatedResponse{
 			Message:    "Countries listed successfully",
 			Data:       countries,
 			Pagination: pagination,
@@ -51,9 +52,9 @@ func (handler *CountryHandler) Retrieve(c *gin.Context) {
 	if err != nil {
 		c.JSON(
 			http.StatusInternalServerError,
-			responses.ApiResponse{
+			responses.ErrorResponse{
 				Message: "Error retrieving country",
-				Errors: []responses.ApiResponse{
+				Errors: []errors.ErrorSerializer{
 					{
 						Message: err.Error(),
 					},
@@ -63,7 +64,7 @@ func (handler *CountryHandler) Retrieve(c *gin.Context) {
 	}
 	c.JSON(
 		http.StatusOK,
-		responses.ApiResponse{
+		responses.SuccessResponse{
 			Message: "Country retrieved successfully",
 			Data:    country,
 		})
