@@ -3,32 +3,29 @@ package validations
 import (
 	"fmt"
 
+	"base-go-app/src/common/serializers/errors"
+
 	"github.com/go-playground/validator/v10"
 )
 
-type ValidationError struct {
-	Field   string `json:"field"`
-	Message string `json:"message"`
-}
-
-func GenericApiErrorValidator(err error) []ValidationError {
-	var errors []ValidationError
+func GenericApiErrorValidator(err error) []errors.ErrorSerializer {
+	var errorList []errors.ErrorSerializer
 
 	if validationErrs, ok := err.(validator.ValidationErrors); ok {
 		for _, fieldErr := range validationErrs {
 			message := getValidationMessage(fieldErr)
-			errors = append(errors, ValidationError{
+			errorList = append(errorList, errors.ErrorSerializer{
 				Field:   fieldErr.Field(),
 				Message: message,
 			})
 		}
 	} else {
-		errors = append(errors, ValidationError{
+		errorList = append(errorList, errors.ErrorSerializer{
 			Field:   "RequestBody",
 			Message: "Invalid Request Body",
 		})
 	}
-	return errors
+	return errorList
 }
 
 func getValidationMessage(fieldErr validator.FieldError) string {
